@@ -1,4 +1,5 @@
 from django.db import models
+from .parcelle import Parcelle
 
 class Observation(models.Model):
     parcelle = models.ForeignKey(Parcelle, on_delete=models.CASCADE)
