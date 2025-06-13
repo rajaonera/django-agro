@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.5/dist/umd/supabase.min.js"></script>
+</head>
+<body>
+  <h1 id="welcome">Bienvenue !</h1>
+
+  <button onclick="goToProfil()">Voir mon profil</button>
+  <button onclick="goToModifierProfil()">Modifier mon profil</button>
+  <button onclick="logout()">Se déconnecter</button>
+
+  <script>
+    const client = supabase.createClient(
+        'https://iizemuhywcgfokqkhdoq.supabase.co',
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlpemVtdWh5d2NnZm9rcWtoZG9xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkxMTgyNDYsImV4cCI6MjA2NDY5NDI0Nn0.-D5f3G-Q86899VnH2wNWMDXhZv2zb67Hqk6u5Wjewb0'  
+    );
+
+    window.addEventListener('DOMContentLoaded', async () => {
+        const { data: userData, error: userError } = await client.auth.getUser();
+        
+        if (userError || !userData.user) {
+          alert("Accès refusé. Veuillez vous connecter.");
+          window.location.href = "index.html";
+        } else {
+          document.getElementById("welcome").textContent = "Bienvenue, " + userData.user.email + " !";
+          const uid = userData.user.id;  
+          const email = userData.user.email;
+      
+          // Appel de la fonction SQL stockée
+          const { data: rpcData, error: rpcError } = await client.  rpc('create_profile_if_not_exists', {
+              uid: uid,
+              email: email
+          });
+      
+          if (rpcError) {
+            console.error('Erreur lors de la création du profil:', rpcError);
+          } else {
+            console.log('Profil créé ou existant confirmé.');
+          }
+        }
+      });
+        
+        
+    function goToProfil() {
+      window.location.href = "profil.html";
+    }
+
+    function goToModifierProfil() {
+      window.location.href = "modifier-profile.html";
+    }
+
+    async function logout() {
+      await client.auth.signOut();
+      window.location.href = "index.html";
+    }
+  </script>
+</body>
+</html>

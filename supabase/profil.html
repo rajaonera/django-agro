@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Mon profil</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.5/dist/umd/supabase.min.js"></script>
+</head>
+<body>
+  <h1>Mon Profil</h1>
+
+  <p><strong>Email :</strong> <span id="email"></span></p>
+  <p><strong>Prénom :</strong> <span id="prenom"></span></p>
+  <p><strong>Nom :</strong> <span id="nom"></span></p>
+  <p><strong>Rôle :</strong> <span id="role"></span></p>
+
+  <button onclick="window.location.href='modifier-profile.html'">Modifier</button>
+  <button onclick="window.location.href='dashboard.html'">Retour au dashboard</button>
+  <button onclick="logout()">Se déconnecter</button>
+
+  <script>
+    
+    const client = supabase.createClient(
+        'https://iizemuhywcgfokqkhdoq.supabase.co',
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlpemVtdWh5d2NnZm9rcWtoZG9xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkxMTgyNDYsImV4cCI6MjA2NDY5NDI0Nn0.-D5f3G-Q86899VnH2wNWMDXhZv2zb67Hqk6u5Wjewb0'  
+    );
+    // Charger les données du profil
+    window.addEventListener('DOMContentLoaded', async () => {
+      const { data: authData, error: authError } = await client.auth.getUser();
+
+      if (authError || !authData.user) {
+        alert("Veuillez vous reconnecter.");
+        window.location.href = "login.html";
+        return;
+      }
+
+      const userId = authData.user.id;
+
+      const { data: profil, error } = await client
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single();
+
+      if (error) {
+        console.error(error);
+        alert("Erreur lors du chargement du profil");
+      } else {
+        document.getElementById('email').textContent = authData.user.email;
+        document.getElementById('prenom').textContent = profil.nom || 'N/A';
+        document.getElementById('nom').textContent = profil.prenom || 'N/A';
+        document.getElementById('role').textContent = profil.role || 'N/A';
+      }
+    });
+
+    async function logout() {
+      await client.auth.signOut();
+      window.location.href = 'login.html';
+    }
+  </script>
+</body>
+</html>
