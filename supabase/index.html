@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Test Auth Supabase</title>
+</head>
+<body>
+  <h2>Inscription</h2>
+  <input type="email" id="signup-email" placeholder="Email" />
+  <input type="password" id="signup-password" placeholder="Mot de passe" />
+  <button onclick="signUp()">S'inscrire</button>
+
+  <h2>Connexion par mot de passe</h2>
+  <input type="email" id="login-email" placeholder="Email" />
+  <input type="password" id="login-password" placeholder="Mot de passe" />
+  <button onclick="signIn()">Se connecter</button>
+
+  <h2>Connexion par lien magique</h2>
+  <input type="email" id="magic-email" placeholder="Email" />
+  <button onclick="sendMagicLink()">Envoyer le lien magique</button>
+
+  <h2>Actions</h2>
+  <button onclick="getUser()">Afficher session</button>
+  <button onclick="signOut()">Se déconnecter</button>
+
+  <!-- Charge supabase-js -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+  <!-- Script principal -->
+  <script>
+    // Initialise Supabase
+    const supabaseUrl = 'https://iizemuhywcgfokqkhdoq.supabase.co';
+    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlpemVtdWh5d2NnZm9rcWtoZG9xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkxMTgyNDYsImV4cCI6MjA2NDY5NDI0Nn0.-D5f3G-Q86899VnH2wNWMDXhZv2zb67Hqk6u5Wjewb0';
+    const client = supabase.createClient(supabaseUrl, supabaseAnonKey);
+
+    // Fonctions globales
+    async function signUp() {
+      const email = document.getElementById('signup-email').value;
+      const password = document.getElementById('signup-password').value;
+      const { data, error } = await client.auth.signUp({ email, password });
+      if (error) {
+        alert('Erreur inscription: ' + error.message);
+        console.error(error);
+      } else {
+        alert('Inscription réussie! Vérifie ta boîte mail.');
+        console.log('Inscription:', data);
+      }
+    }
+
+    async function signIn() {
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+      const { data, error } = await client.auth.signInWithPassword({ email, password });
+      if (error) {
+        alert("Erreur de connexion : " + error.message);
+      } else {
+        alert("Connexion réussie !");
+        window.location.href = "dashboard.html";
+      }
+    }
+
+    async function sendMagicLink() {
+      const email = document.getElementById('magic-email').value;
+      if (!email) {
+        alert('Merci de saisir votre email');
+        return;
+      }
+      const { data, error } = await client.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo: 'http://localhost:8080/dashboard.html',
+        },
+      });  
+      if (error) {
+        alert('Erreur envoi lien magique : ' + error.message);
+        console.error(error);
+      } else {
+        alert('Un lien magique a été envoyé à votre email. Vérifie ta boîte de réception.');
+        console.log(data);
+      }
+    }
+
+    async function getUser() {
+      const { data: { user }, error } = await client.auth.getUser();
+      if (error) {
+        alert('Erreur récupération utilisateur: ' + error.message);
+        console.error(error);
+      } else if (user) {
+        alert(`Utilisateur connecté : ${user.email}`);
+      } else {
+        alert('Aucun utilisateur connecté.');
+      }
+    }
+
+    async function signOut() {
+      const { error } = await client.auth.signOut();
+      if (error) {
+        alert('Erreur déconnexion: ' + error.message);
+        console.error(error);
+      } else {
+        alert('Déconnecté avec succès.');
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+user : hugueszeus@gmaail.com
+
+pswd:  sa9$T6h6GtjF@U9
+
+cle API : 
+
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlpemVtdWh5d2NnZm9rcWtoZG9xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkxMTgyNDYsImV4cCI6MjA2NDY5NDI0Nn0.-D5f3G-Q86899VnH2wNWMDXhZv2zb67Hqk6u5Wjewb0
+
+project URL : https://iizemuhywcgfokqkhdoq.supabase.co
+
+
+przm mpgb jzye agcy
+
+service role API KEY
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlpemVtdWh5d2NnZm9rcWtoZG9xIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0OTExODI0NiwiZXhwIjoyMDY0Njk0MjQ2fQ.k6osOVlIC3fGPKW2A_BsoWpx9Mdy3fOplu6S_exhMVc
+
+
+database pwsd
+pm15CrdnmokZADzk
